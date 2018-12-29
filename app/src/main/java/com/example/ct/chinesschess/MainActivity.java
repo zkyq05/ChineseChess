@@ -1,36 +1,22 @@
 package com.example.ct.chinesschess;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.List;
 
 import rx.Observable;
@@ -47,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
     int last_time;
     int last_min;
     int mode = 3;
-    String server_url = "http://119.29.204.118:8099";
-//      String server_url = "http://192.168.204.1:8099";
+//    String server_url = "http://119.29.204.118:8099";
+//      String server_url = "http://localhost:8099";
     // 悔棋
     void oh_no(View view) {
 //        if(!my_turn) {
@@ -496,56 +482,87 @@ public class MainActivity extends AppCompatActivity {
 //        return count<20;
 //    }
 
-    void send_chess() {
-        try {
-            String baseUrl = server_url;
-            //合成参数
-            StringBuilder tempParams = new StringBuilder();
-//            if(harder()) {
-//                int hard = mode+1;
-//                tempParams.append("\""+hard+"chess:"+vec_to_str(board)+"\"");
+//    void send_chess() {
+//        try {
+//            String baseUrl = server_url;
+//            //合成参数
+//            StringBuilder tempParams = new StringBuilder();
+////            if(harder()) {
+////                int hard = mode+1;
+////                tempParams.append("\""+hard+"chess:"+vec_to_str(board)+"\"");
+////            }
+////            else
+//            tempParams.append("\""+mode+"chess:"+vec_to_str(board)+"\"");
+//            Log.e("getdata","request:"+"\""+mode+"chess:"+vec_to_str(board)+"\"");
+//            String params =tempParams.toString();
+//            // 请求的参数转换为byte数组
+//            byte[] postData = params.getBytes();
+//            // 新建一个URL对象
+//            URL url = new URL(baseUrl);
+//            // 打开一个HttpURLConnection连接
+//            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+//            // Post请求必须设置允许输出 默认false
+//            urlConn.setDoOutput(true);
+//            //设置请求允许输入 默认是true
+//            urlConn.setDoInput(true);
+//            // Post请求不能使用缓存
+//            urlConn.setUseCaches(false);
+//            // 设置为Post请求
+//            urlConn.setRequestMethod("POST");
+//            //设置本次连接是否自动处理重定向
+//            urlConn.setInstanceFollowRedirects(true);
+//            // 配置请求Content-Type
+//            urlConn.setRequestProperty("Content-Type", "application/text");
+//            // 开始连接
+//            urlConn.connect();
+//            // 发送请求参数
+//            DataOutputStream dos = new DataOutputStream(urlConn.getOutputStream());
+//            dos.write(postData);
+//            dos.flush();
+//            dos.close();
+//            // 判断请求是否成功
+//            if (urlConn.getResponseCode() == 200) {
+//                // 获取返回的数据
+//                StringBuilder sb = new StringBuilder();
+//                BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
+//                String line;
+//                while ((line = rd.readLine()) != null) {
+//                    sb.append(line);
+//                }
+//                String result = sb.toString();
+//                AI_result = str_to_vec(result).clone();
+//                Log.e("getdata","result:"+result);
+//                Log.e("getdata","AI_result:"+AI_result);
+//                Observable observable = Observable.create(new Observable.OnSubscribe<String>() {
+//                        @Override
+//                        public void call(final Subscriber<? super String> subscriber) {
+//                            subscriber.onNext("OK");
+//                        }
+//                    });
+//                    observable.subscribeOn(Schedulers.io())
+//                            .observeOn(AndroidSchedulers.mainThread())
+//                            .subscribe(subscriber);
+//                Log.e("ok", "Post方式请求成功，result--->" + result);
+//            } else {
+//                Log.e("err", "Post方式请求失败");
 //            }
-//            else
-            tempParams.append("\""+mode+"chess:"+vec_to_str(board)+"\"");
-            String params =tempParams.toString();
-            // 请求的参数转换为byte数组
-            byte[] postData = params.getBytes();
-            // 新建一个URL对象
-            URL url = new URL(baseUrl);
-            // 打开一个HttpURLConnection连接
-            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            // Post请求必须设置允许输出 默认false
-            urlConn.setDoOutput(true);
-            //设置请求允许输入 默认是true
-            urlConn.setDoInput(true);
-            // Post请求不能使用缓存
-            urlConn.setUseCaches(false);
-            // 设置为Post请求
-            urlConn.setRequestMethod("POST");
-            //设置本次连接是否自动处理重定向
-            urlConn.setInstanceFollowRedirects(true);
-            // 配置请求Content-Type
-            urlConn.setRequestProperty("Content-Type", "application/text");
-            // 开始连接
-            urlConn.connect();
-            // 发送请求参数
-            DataOutputStream dos = new DataOutputStream(urlConn.getOutputStream());
-            dos.write(postData);
-            dos.flush();
-            dos.close();
-            // 判断请求是否成功
-            if (urlConn.getResponseCode() == 200) {
-                // 获取返回的数据
-                StringBuilder sb = new StringBuilder();
-                BufferedReader rd = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-                String line;
-                while ((line = rd.readLine()) != null) {
-                    sb.append(line);
-                }
-                String result = sb.toString();
-                AI_result = str_to_vec(result).clone();
-
-                Observable observable = Observable.create(new Observable.OnSubscribe<String>() {
+//            // 关闭连接
+//            urlConn.disconnect();
+//        } catch (Exception e) {
+//            Log.e("err", e.toString());
+//        }
+//    }
+    private void send_chess(){
+        String url="http://47.95.194.151:8090/Chess/chess?chess="+vec_to_str(board);
+        Log.e("getdata", "url:"+url);
+        RequestParams params = new RequestParams(url);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    Log.e("getdata", "res:"+result);
+                    AI_result = str_to_vec(result).clone();
+                    Observable observable = Observable.create(new Observable.OnSubscribe<String>() {
                         @Override
                         public void call(final Subscriber<? super String> subscriber) {
                             subscriber.onNext("OK");
@@ -554,34 +571,42 @@ public class MainActivity extends AppCompatActivity {
                     observable.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(subscriber);
-                Log.e("ok", "Post方式请求成功，result--->" + result);
-            } else {
-                Log.e("err", "Post方式请求失败");
+                    Log.e("ok", "get方式请求成功，result--->" + result);
+                } catch (Exception e) {
+                    Log.e("getdata", "err:"+e);
+                }
             }
-            // 关闭连接
-            urlConn.disconnect();
-        } catch (Exception e) {
-            Log.e("err", e.toString());
-        }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.e("getdata", "err:"+ex);
+            }
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("getdata", "onCancelled:"+cex);
+            }
+            @Override
+            public void onFinished() {
+                Log.e("getdata", "onFinished:");
+            }
+        });
     }
-
     void click_chess(View view) {
-        if(my_turn && !over) {
+        if(my_turn && !over) {//如果是我的回合
             ConstraintLayout c = (ConstraintLayout)view.getParent();
             int id = c.indexOfChild(view);
-            if(last_click == -1) {
-                if(board[id] != 0 && board[id] > 16) {
+            if(last_click == -1) {//如果还没拿棋子
+                if(board[id] != 0 && board[id] > 16) {//如果该位置是自己棋子则拿起
                     ImageView target = (ImageView) c.getChildAt(id);
                     set_choose(target.getBackground());
                     last_click = id;
                 }
             } else {
-                if(board[id] > 16) {
+                if(board[id] > 16) {//如果该位置是自己棋子则拿起
                     ImageView target = (ImageView) c.getChildAt(id);
                     set_choose(target.getBackground());
                     last_click = id;
                 }
-                else if(can_move(last_click, id)) {
+                else if(can_move(last_click, id)) {//是否可以移动到此位置
                     update_action(last_click);
                     ImageView from = (ImageView) c.getChildAt(last_click);
                     Drawable from_img = from.getBackground();
